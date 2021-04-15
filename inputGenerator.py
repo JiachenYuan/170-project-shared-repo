@@ -45,6 +45,38 @@ def randomGenerate(g, numVertices):
                                                                                     small graphs: 20-30
                                                                                     medium graphs: 31-50
                                                                                     large graphs: 51-100
-def heldOut():
-
+                                                                                        ~ from Piazza
 """
+
+def heldOut(num):
+    # check limitation 3
+    G = nx.Graph()
+    if num == 30:
+        randomGenerate(G, 30)
+        if G.number_of_nodes() < 20 or G.number_of_nodes() > 30:
+            return heldOut(30)
+    if num == 50:
+        randomGenerate(G, 50)
+        if G.number_of_nodes() < 31 or G.number_of_nodes() > 50:
+            return heldOut(50)
+    if num == 100:
+        randomGenerate(G, 100)
+        if G.number_of_nodes() < 51 or G.number_of_nodes() > 100:
+            return heldOut(100)
+
+    # check limitation 2
+    # Idea: a graph is only connected iff |E| >= |V|-1
+    if G.number_of_edges() < G.number_of_nodes() - 1:
+        return heldOut(num)
+
+
+    # check limitation 1
+    v_d_pair = list(G.degree(list(range(G.number_of_nodes()))))
+    for v, d in v_d_pair:
+        if d < 2:
+            return heldOut(num)
+
+    return G
+
+
+
