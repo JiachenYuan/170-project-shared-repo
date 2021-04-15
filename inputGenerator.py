@@ -41,7 +41,10 @@ def randomGenerate(g, numVertices):
 """ 2 limitations to satisfy: 
                     1. every vertex should have degree at least 2
                     2. the graph generated is connected. Maybe use DFS to check this property...
-                    3. number of vertices are relatively large, measured by some threshold (|V| >= 1/2 * upper_limit)
+                    3. number of vertices are sufficiently large, measured by some threshold----
+                                                                                    small graphs: 20-30
+                                                                                    medium graphs: 31-50
+                                                                                    large graphs: 51-100
 def heldOut():
 
 """
