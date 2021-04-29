@@ -5,6 +5,7 @@ import networkx as nx
 
 import utils
 
+
 def validate_file(path):
     """File must not exceed 100KB and must contain only numbers and spaces"""
     if os.path.getsize(path) > 100000:
@@ -15,6 +16,7 @@ def validate_file(path):
             print(f"{path} contains characters that are not numbers and spaces")
             return False
     return True
+
 
 def read_input_file(path, min_size=None, max_size=None):
     """
@@ -41,7 +43,7 @@ def read_input_file(path, min_size=None, max_size=None):
             assert tokens[0].isdigit() and int(tokens[0]) < n, 'Error in input file format'
             assert tokens[1].isdigit() and int(tokens[1]) < n, 'Error in input file format'
             assert bool(re.match(r"(^\d+\.\d{1,3}$|^\d+$)", tokens[2])), 'Error in input file format'
-            assert 0 < float(tokens[2]) < 100 , 'Error in input file format'
+            assert 0 < float(tokens[2]) < 100, 'Error in input file format'
 
         G = nx.parse_edgelist(lines, nodetype=int, data=(("weight", float),))
         G.add_nodes_from(range(n))
@@ -50,10 +52,10 @@ def read_input_file(path, min_size=None, max_size=None):
 
         for node, val in G.degree():
             assert val >= 2, 'Every vertex in the input graph should have degree atleast 2'
-            
+
         if min_size is not None:
             assert min_size < len(G), 'Graph doesn\'t have enough nodes for it\'s size'
-            
+
         if max_size is not None:
             assert len(G) <= max_size, 'Graph has too many nodes for it\'s size'
 
@@ -76,10 +78,10 @@ def write_input_file(G, path):
         fo.writelines("\n".join(lines))
         fo.close()
 
+
 def read_output_file(G, path):
     """
     Parses and validates an output file
-
     Args:
         G: input graph corresponding to input file
         path: str, path to output file
@@ -131,14 +133,14 @@ def read_output_file(G, path):
             u = int(road[0])
             v = int(road[1])
             assert H.has_edge(u, v), 'Specified edge is not in input graph'
-            removed_edges.append((u,v))
+            removed_edges.append((u, v))
 
     return utils.calculate_score(G, cities, removed_edges)
+
 
 def write_output_file(G, c, k, path):
     """
     Writes the list of cities and roads to remove to an output file
-
     Args:
         G: input graph corresponding to input file
         c: list of cities (vertices)
@@ -149,9 +151,9 @@ def write_output_file(G, c, k, path):
     H = G.copy()
 
     for road in k:
-        assert H.has_edge(road[0],road[1]), "{} is not a valid edge in graph G".format(road)
+        assert H.has_edge(road[0], road[1]), "{} is not a valid edge in graph G".format(road)
     H.remove_edges_from(k)
-    
+
     for city in c:
         assert H.has_node(city), "{} is not a valid node in graph G".format(city)
     H.remove_nodes_from(c)

@@ -23,8 +23,8 @@ def solve(G):
     edgesDeleted = []
 
     while c != 0 or k != 0:
-        currShortestPath = nx.shortest_path(H, 0, num_of_nodes - 1)
-        currShortestPathLength = nx.dijkstra_path_length(H, 0, num_of_nodes-1)
+        currShortestPath = nx.shortest_path(H, 0, num_of_nodes - 1,'weight')
+        currShortestPathLength = nx.shortest_path_length(H, 0, num_of_nodes-1, 'weight')
 
         edgesAlongShortestPath = []
         nodesAlongShortestPath = []
