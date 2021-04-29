@@ -20,25 +20,22 @@ class MyTestCase(unittest.TestCase):
 
     def test_30(self):
 
-        G = inputGenerator.heldOut(30)
+        G = inputGenerator.refine(30)
 
         parse.write_input_file(G, "samples_to_upload/30.in")
         H = parse.read_input_file("samples_to_upload/30.in")
 
-        # print(str(H.number_of_nodes()))
-        # for (u, v, wt) in H.edges.data('weight'):
-        #     print("(" + str(u) + ", " + str(v) + ", " + str(wt) + ")")
-        # print("number of undirected edges in this graph is " + str(H.number_of_edges()))
+
 
     def test_50(self):
-        G = inputGenerator.heldOut(50)
+        G = inputGenerator.refine(50)
 
         parse.write_input_file(G, "samples_to_upload/50.in")
         H = parse.read_input_file("samples_to_upload/50.in")
 
     def test_100(self):
 
-        G = inputGenerator.heldOut(100)
+        G = inputGenerator.refine(100)
 
         parse.write_input_file(G, "samples_to_upload/100.in")
         H = parse.read_input_file("samples_to_upload/100.in")
