@@ -91,29 +91,42 @@ def IsDrawFromEdges():
 def nodeToDelete(curr_max_length, H, num_of_nodes, nodesAlongShortestPath):
     max_length = curr_max_length
     node_yielding_max_length = None
+    lst = []
 
     for v in nodesAlongShortestPath:
         H_temp = H.copy()
         H_temp.remove_node(v)
+
         if nx.is_connected(H_temp):
             updated_shortest_path_length = nx.shortest_path_length(H_temp, 0, num_of_nodes - 1, weight="weight")
-            if updated_shortest_path_length >= max_length:
+            if updated_shortest_path_length > max_length:
                 max_length = updated_shortest_path_length
                 node_yielding_max_length = v
+            elif updated_shortest_path_length == max_length:
+                lst.append((v, updated_shortest_path_length))
+    equalProfitableNeighbors = [(x, y) for x, y in lst if y == max_length]
+    if len(equalProfitableNeighbors)!=0:
+        node_yielding_max_length, max_length = random.choice(equalProfitableNeighbors)
     return node_yielding_max_length, max_length
 
 
 def edgeToDelete(curr_max_length, H, num_of_nodes, edgesAlongShortestPath):
     max_length = curr_max_length
     edge_yielding_max_length = None
+    lst = []
     for u, v in edgesAlongShortestPath:
         H_temp = H.copy()
         H_temp.remove_edge(u, v)
         if nx.is_connected(H_temp):
             updated_shortest_path_length = nx.shortest_path_length(H_temp, 0, num_of_nodes - 1, weight="weight")
-            if updated_shortest_path_length >= max_length:
+            if updated_shortest_path_length > max_length:
                 max_length = updated_shortest_path_length
                 edge_yielding_max_length = (u, v)
+            elif updated_shortest_path_length == max_length:
+                lst.append(((u, v), updated_shortest_path_length))
+    equalProfitableNeighbors = [(x, y) for x, y in lst if y == max_length]
+    if len(equalProfitableNeighbors) != 0:
+        edge_yielding_max_length, max_length = random.choice(equalProfitableNeighbors)
     return edge_yielding_max_length, max_length
 
 
@@ -121,22 +134,22 @@ def edgeToDelete(curr_max_length, H, num_of_nodes, edgesAlongShortestPath):
 
 # Usage: python3 solver.py test.in
 
-if __name__ == '__main__':
-    assert len(sys.argv) == 2
-    path = sys.argv[1]
-    G = read_input_file(path)
-    c, k = solve(G)
-    assert is_valid_solution(G, c, k)
-    print("Shortest Path Difference: {}".format(calculate_score(G, c, k)))
-    write_output_file(G, c, k, 'TESTING_SOLVER/given_sample_30.out')
+# if __name__ == '__main__':
+#     assert len(sys.argv) == 2
+#     path = sys.argv[1]
+#     G = read_input_file(path)
+#     c, k = solve(G)
+#     assert is_valid_solution(G, c, k)
+#     print("Shortest Path Difference: {}".format(calculate_score(G, c, k)))
+#     write_output_file(G, c, k, 'TESTING_SOLVER/given_sample_30.out')
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
-#if __name__ == '__main__':
-#    inputs = glob.glob('inputs/large/*')
-#    for input_path in inputs:
-#        output_path = 'outputs/large/' + basename(normpath(input_path))[:-3] + '.out'
-#        G = read_input_file(input_path)
-#        c, k = solve(G)
-#        assert is_valid_solution(G, c, k)
-#        distance = calculate_score(G, c, k)
-#        write_output_file(G, c, k, output_path)
+if __name__ == '__main__':
+   inputs = glob.glob('inputs/medium/*')
+   for input_path in inputs:
+       output_path = 'outputs/medium/' + basename(normpath(input_path))[:-3] + '.out'
+       G = read_input_file(input_path)
+       c, k = solve(G)
+       assert is_valid_solution(G, c, k)
+       distance = calculate_score(G, c, k)
+       write_output_file(G, c, k, output_path)
