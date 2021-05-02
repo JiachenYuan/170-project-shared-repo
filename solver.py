@@ -42,29 +42,17 @@ def solve(G):
             return nodesDeleted, edgesDeleted
         elif k == 0 and c != 0:
             bool_willDeleteANode = True
-            node_yielding_max_length = nodeToDelete(currShortestPathLength, H, num_of_nodes, nodesAlongShortestPath)
+            node_yielding_max_length, max_length = nodeToDelete(currShortestPathLength, H, num_of_nodes, nodesAlongShortestPath)
         elif k != 0 and c == 0:
             bool_willDeleteAnEdge = True
-            edge_yielding_max_length = edgeToDelete(currShortestPathLength, H, num_of_nodes, edgesAlongShortestPath)
+            edge_yielding_max_length, max_length = edgeToDelete(currShortestPathLength, H, num_of_nodes, edgesAlongShortestPath)
         else:
-            # toss a coin={0.6: nodes; 0.4: edges} to determine which to draw
-            coin = random.uniform(0, 1)
-            if coin <= 0.6:
-                bool_willDeleteANode = True
-                node_yielding_max_length = nodeToDelete(currShortestPathLength, H, num_of_nodes, nodesAlongShortestPath)
-                if node_yielding_max_length is None:
-                    bool_willDeleteANode = False
-                    bool_willDeleteAnEdge = True
-                    edge_yielding_max_length = edgeToDelete(currShortestPathLength, H, num_of_nodes,
-                                                            edgesAlongShortestPath)
-            else:
+            node_yielding_max_length, max_length_node = nodeToDelete(currShortestPathLength, H, num_of_nodes, nodesAlongShortestPath)
+            edge_yielding_max_length, max_length_edge = edgeToDelete(currShortestPathLength, H, num_of_nodes, edgesAlongShortestPath)
+            if max_length_edge >= max_length_node:
                 bool_willDeleteAnEdge = True
-                edge_yielding_max_length = edgeToDelete(currShortestPathLength, H, num_of_nodes, edgesAlongShortestPath)
-                if edge_yielding_max_length is None:
-                    bool_willDeleteAnEdge = False
-                    bool_willDeleteANode = True
-                    node_yielding_max_length = nodeToDelete(currShortestPathLength, H, num_of_nodes,
-                                                            nodesAlongShortestPath)
+            else:
+                bool_willDeleteANode = True
 
         if bool_willDeleteANode and (node_yielding_max_length is None):
             return nodesDeleted, edgesDeleted
@@ -109,10 +97,10 @@ def nodeToDelete(curr_max_length, H, num_of_nodes, nodesAlongShortestPath):
         H_temp.remove_node(v)
         if nx.is_connected(H_temp):
             updated_shortest_path_length = nx.shortest_path_length(H_temp, 0, num_of_nodes - 1, weight="weight")
-            if updated_shortest_path_length > max_length:
+            if updated_shortest_path_length >= max_length:
                 max_length = updated_shortest_path_length
                 node_yielding_max_length = v
-    return node_yielding_max_length
+    return node_yielding_max_length, max_length
 
 
 def edgeToDelete(curr_max_length, H, num_of_nodes, edgesAlongShortestPath):
@@ -123,10 +111,10 @@ def edgeToDelete(curr_max_length, H, num_of_nodes, edgesAlongShortestPath):
         H_temp.remove_edge(u, v)
         if nx.is_connected(H_temp):
             updated_shortest_path_length = nx.shortest_path_length(H_temp, 0, num_of_nodes - 1, weight="weight")
-            if updated_shortest_path_length > max_length:
+            if updated_shortest_path_length >= max_length:
                 max_length = updated_shortest_path_length
                 edge_yielding_max_length = (u, v)
-    return edge_yielding_max_length
+    return edge_yielding_max_length, max_length
 
 
 # Here's an example of how to run your solver.
@@ -143,12 +131,12 @@ if __name__ == '__main__':
     write_output_file(G, c, k, 'TESTING_SOLVER/given_sample_30.out')
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
-# if __name__ == '__main__':
-#     inputs = glob.glob('inputs/*')
-#     for input_path in inputs:
-#         output_path = 'outputs/' + basename(normpath(input_path))[:-3] + '.out'
-#         G = read_input_file(input_path)
-#         c, k = solve(G)
-#         assert is_valid_solution(G, c, k)
-#         distance = calculate_score(G, c, k)
-#         write_output_file(G, c, k, output_path)
+#if __name__ == '__main__':
+#    inputs = glob.glob('inputs/large/*')
+#    for input_path in inputs:
+#        output_path = 'outputs/large/' + basename(normpath(input_path))[:-3] + '.out'
+#        G = read_input_file(input_path)
+#        c, k = solve(G)
+#        assert is_valid_solution(G, c, k)
+#        distance = calculate_score(G, c, k)
+#        write_output_file(G, c, k, output_path)
